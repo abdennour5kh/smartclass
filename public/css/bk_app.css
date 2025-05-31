@@ -1,0 +1,35 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Global Css */
+*, ::before, ::after {
+    box-sizing: border-box;
+}
+body {
+    background-color: #f3f3f3 !important;
+    font-family: "Roboto", sans-serif;
+    font-size: 1rem;
+    font-weight: initial;
+}
+.font-weight-light {
+    font-weight: 300 !important;
+}
+
+/* Auth */
+.auth-form .form-group {
+    margin-bottom: 1.5rem;
+}
+.auth-form .form-group .form-control {
+    background: transparent;
+    border-radius: 0;
+    font-size: .9375rem;
+}
+.form-control {
+    border: 1px solid #f3f3f3;
+    font-weight: 400;
+    box-shadow: none;
+    outline: 0;
+    height: 3.5rem;
+    padding: 0.94rem 1.94rem;
+    line-height: 1.5;
+}
