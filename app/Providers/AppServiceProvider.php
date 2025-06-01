@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer(['student.partials.navbar', 'teacher.partials.navbar', 'admin.partials.navbar'], function ($view) {
             $user = Auth::user();
-            if ($user && $user->role === 'student') {
+            if ($user && ($user->role === 'student' || $user->role === 'teacher')) {
                 /** @var User $user */
                 $conversations = $user->conversations()
                     ->with(['messages.sender'])

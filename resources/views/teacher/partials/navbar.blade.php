@@ -13,46 +13,28 @@
           <li class="nav-item dropdown mr-1">
             <a class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center" id="messageDropdown" href="#" data-toggle="dropdown">
               <i class="mdi mdi-message-text mx-0"></i>
-              <span class="count"></span>
+              @if ($conversations->count())
+                <span class="count"></span>
+              @endif
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="messageDropdown">
               <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
-              <a class="dropdown-item">
-                <div class="item-thumbnail">
-                    <img src="{{ asset('images/face1.jpg') }}" alt="image" class="profile-pic">
-                </div>
-                <div class="item-content flex-grow">
-                  <h6 class="ellipsis font-weight-normal">Nadir Farah
-                  </h6>
-                  <p class="font-weight-light small-text text-muted mb-0">
-                    Example of a Message
-                  </p>
-                </div>
-              </a>
-              <a class="dropdown-item">
-                <div class="item-thumbnail">
-                    <img src="{{ asset('images/face1.jpg') }}" alt="image" class="profile-pic">
-                </div>
-                <div class="item-content flex-grow">
-                  <h6 class="ellipsis font-weight-normal">Nada Kherici
-                  </h6>
-                  <p class="font-weight-light small-text text-muted mb-0">
-                    Example of a Message
-                  </p>
-                </div>
-              </a>
-              <a class="dropdown-item">
-                <div class="item-thumbnail">
-                    <img src="{{ asset('images/face1.jpg') }}" alt="image" class="profile-pic">
-                </div>
-                <div class="item-content flex-grow">
-                  <h6 class="ellipsis font-weight-normal"> Karima Mechri
-                  </h6>
-                  <p class="font-weight-light small-text text-muted mb-0">
-                    Example of a Message
-                  </p>
-                </div>
-              </a>
+              @forelse ($conversations as $cv)
+                <a class="dropdown-item" href="{{ route('student_show_conversation', $cv) }}">
+                  <div class="item-thumbnail">
+                      <img src="{{ $cv->messages->last()->sender->avatar_url }}" alt="image" class="profile-pic">
+                  </div>
+                  <div class="item-content flex-grow">
+                    <h6 class="ellipsis font-weight-normal">{{ $cv->messages->last()->sender->full_name }}
+                    </h6>
+                    <p class="font-weight-light small-text text-muted mb-0">
+                      {{ $cv->subject }}
+                    </p>
+                  </div>
+                </a>
+              @empty
+                <span class="dropdown-item text-muted">📬 No new messages</span>
+              @endforelse
             </div>
           </li>
           <li class="nav-item dropdown mr-4">
@@ -117,15 +99,15 @@
           </li>
           <li class="nav-item nav-profile dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-              <img src="{{ asset('images/face1.jpg') }}" alt="profile"/>
+              <img src="{{ $teacher->user->avatar_url }}" alt="profile"/>
               <span class="nav-profile-name">{{ $teacher->user->full_name }}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-              <a class="dropdown-item">
+              <a class="dropdown-item" href="{{ route('teacher_profile') }}">
                 <i class="mdi mdi-settings text-primary"></i>
-                Settings
+                Profile
               </a>
-              <a class="dropdown-item">
+              <a class="dropdown-item" href="{{ route('logout') }}">
                 <i class="mdi mdi-logout text-primary"></i>
                 Logout
               </a>

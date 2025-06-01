@@ -1,184 +1,123 @@
 @extends('teacher.layouts.teacher')
-@section('title', 'Teacher Dachboard')
+
+@section('title', 'Dashboard')
 
 @section('content')
-<div id="summary">
-    <div class="row">
-        <div class="col-md-4 h-100">
-        <div class="stat-box text-white position-relative overflow-hidden rounded-3 p-4" style="background-color: #864ad0;">
-            <div class="z-1 position-relative">
-            <h4 class="mb-1">Justifications (5)</h4>
-            <p class="fs-4 mb-0">pending jsutifications review</p>
-            </div>
-            <i class="mdi mdi-file-document stat-icon"></i> <!-- Or use an image if you prefer -->
-        </div>
-        <div class="card mt-3 stat-card">
-            <div class="card-body">
-                <p class="card-descriptipn" style="color: #864ad0;">
-                    Abdennour Khelfi
-                </p>
-                <h4 class="card-title">Absent due to a medical condition</h4>
-                <div class="d-flex justify-content-between align-items-center">
-                    <p class="text-muted">March 24, 2025</p>
-                    <img src="{{ asset('images/face1.jpg') }}" alt="Avatar" class="rounded-circle" width="40" height="40">
-                </div>
+<div class="container-fluid bg-white p-4 border rounded-4 shadow-sm">
+    <div>
+        <!-- Welcome -->
+    <div class="mb-4">
+        <h4 class="fw-bold">👋 Welcome back, {{ auth()->user()->teacher->first_name }}!</h4>
+        <p class="text-muted">Here's a quick summary of your teaching activities.</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card stats-badge  border-0 shadow-sm rounded p-3">
+                <h6 class="mb-1 text-muted">📘 Classes</h6>
+                <h4>{{ $classCount }}</h4>
             </div>
         </div>
-        <div class="card mt-3 stat-card">
-            <div class="card-body">
-                <p class="card-descriptipn" style="color: #864ad0;">
-                    Abdennour Khelfi
-                </p>
-                <h4 class="card-title">Absent due to a medical condition</h4>
-                <div class="d-flex justify-content-between align-items-center">
-                    <p class="text-muted">March 24, 2025</p>
-                    <img src="{{ asset('images/face1.jpg') }}" alt="Avatar" class="rounded-circle" width="40" height="40">
-                </div>
+        <div class="col-md-4">
+            <div class="card stats-badge  border-0 shadow-sm rounded p-3">
+                <h6 class="mb-1 text-muted">📥 Submissions to Grade</h6>
+                <h4>{{ $pendingSubmissions }}</h4>
             </div>
         </div>
-        </div>
-        <div class="col-md-4 h-100">
-            <div class="stat-box text-white position-relative overflow-hidden rounded-3 p-4" style="background-color: #feac30;">
-                <div class="z-1 position-relative">
-                <h4 class="mb-1">Tasks (5)</h4>
-                <p class="fs-4 mb-0">tasks submitted pending review</p>
-                </div>
-                <i class="mdi mdi-file-check stat-icon"></i> <!-- Or use an image if you prefer -->
+        <div class="col-md-4">
+            <div class="card stats-badge  border-0 shadow-sm rounded p-3">
+                <h6 class="mb-1 text-muted">📑 Pending Justifications</h6>
+                <h4>{{ $pendingJustifications }}</h4>
             </div>
-            <div class="card mt-3 stat-card">
-                <div class="card-body">
-                    <p class="card-descriptipn" style="color: #4ebe38;">
-                        Abdennour Khelfi
-                    </p>
-                    <h4 class="card-title">Home work use case diagramms with report</h4>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <p class="text-muted">March 24, 2025</p>
-                        <img src="{{ asset('images/face1.jpg') }}" alt="Avatar" class="rounded-circle" width="40" height="40">
-                    </div>
-                    <p class="text-muted"><i class="mdi mdi-folder-upload mr-1"></i>2 Attachments</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 h-100">
-        <div class="stat-box text-white position-relative overflow-hidden rounded-3 p-4" style="background-color: #51a6f6;">
-            <div class="z-1 position-relative">
-            <h4 class="mb-1">Messages (5)</h4>
-            <p class="fs-4 mb-0">new unread messages recived</p>
-            </div>
-            <i class="mdi mdi-email-outline stat-icon"></i> <!-- Or use an image if you prefer -->
-        </div>
-        <div class="card mt-3 stat-card">
-            <div class="card-body stat-empty p-3">
-                <div style="padding: 30px;border: 2px #d1d1d1 dashed;border-radius: 30px;">
-                    <p class="card-description text-center">Allset!, there no new messages.</p>
-                </div>
-            </div>
-        </div>
-        </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12 stretch-card mt-3">
-            <div class="card br-30">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h2 class="card-title m-0">
-                            My Groups
-                        </h2>
-                        <a href="#"><p>See All</p></a>
-                    </div>
-                    <div class="row mt-3">
-                    <div class="col">
-                        <div class="card br-30" style="background-color: #1668bd;">
-                            <div class="card-body">
-                                <h6 class="card-title text-white">
-                                    Licence, Group 5
-                                </h6>
-                                <p class="card-description text-white">
-                                    Module Security with 37 students
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card br-30" style="background-color: #ff8b00;">
-                            <div class="card-body">
-                                <h6 class="card-title text-white">
-                                    Licence, Group 5
-                                </h6>
-                                <p class="card-description text-white">
-                                    Module Security with 37 students
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card br-30" style="background-color: #ffb318;">
-                            <div class="card-body">
-                                <h6 class="card-title text-white">
-                                    Licence, Group 5
-                                </h6>
-                                <p class="card-description text-white">
-                                    Module Security with 37 students
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card br-30" style="background-color: #349c55;">
-                            <div class="card-body">
-                                <h6 class="card-title text-white">
-                                    Licence, Group 5
-                                </h6>
-                                <p class="card-description text-white">
-                                    Module Security with 37 students
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
+    <!-- Today Session -->
+    @forelse ($todaySessions as $tds)
+        <div class="card shadow-sm rounded-4 border-warning mt-2">
+        <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h6 class="mb-1">🔥 You have a session today</h6>
+                <p class="mb-0">{{ $tds->start_time }} — {{ $tds->end_time }} | {{ $tds->classe->group->name }} — {{ $tds->classe->module->name }}</p>
             </div>
+            <a href="{{ route('teacher_manage_classe', $tds->id) }}" class="btn btn-success btn-sm mt-2 mt-md-0">📋 Dive in</a>
         </div>
     </div>
-<style>
-    .stat-box {
-  height: 93px;
-  /* background-color: #864ad0; */
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  border-radius: 30px;
-}
+    @empty
+        
+    @endforelse
 
-.stat-box h4 {
-    font-weight: bold !important;
-}
+    <!-- Quick Actions -->
+    <div class="mt-4">
+        <h6 class="text-muted mb-3">Quick Actions</h6>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ route('teacher_create_task') }}" class="btn btn-outline-primary btn-sm mr-2">📝 Post Task</a>
+            <a href="{{ route('teacher_classes_overview') }}" class="btn btn-outline-secondary btn-sm mr-2">📘 My Classes</a>
+            <a href="{{ route('teacher_announcement') }}" class="btn btn-outline-info btn-sm">📢 Announcements</a>
+        </div>
+    </div>
+    </div>
+<div class="mt-5">
+            <h6 class="text-muted mb-3">📊 Monthly Attendance Overview</h6>
+            <div style="position: relative; width: 100%; height: auto;">
+                <canvas id="attendanceChart"></canvas>
+            </div>
+        </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const colors = [
+            '#4ebe38', '#007bff', '#ffc107', '#e83e8c', '#20c997', '#6610f2',
+            '#fd7e14', '#6f42c1', '#17a2b8', '#dc3545', '#28a745', '#ff6f61',
+            '#00b894', '#0984e3', '#e17055', '#b71540', '#8e44ad', '#2ecc71',
+            '#f39c12', '#1abc9c', '#c0392b', '#6c5ce7', '#d63031'
+        ];
 
-.stat-icon {
-  font-size: 80px;
-  color: rgba(0, 0, 0, 0.07);
-  position: absolute;
-  bottom: -10px;
-  right: 10px;
-}
+        // Loop through each stats card
+        document.querySelectorAll('.stats-badge').forEach(card => {
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const transparent = color + '45'; // softer transparency
 
-.stat-card {
-    border-radius: 30px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
+            // Set background and text color for the card
+            card.style.backgroundColor = transparent;
+            card.style.color = color;
+        });
 
-.stat-card h4 {
-    font-size: 15px !important;
-}
+        // Attendance Chart
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        const attendanceChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Present', 'Absent', 'Late', 'Justified', 'Excused'],
+                datasets: [{
+                    label: 'Students',
+                    data: [
+                        {{ $attendanceStats['present'] ?? 0 }},
+                        {{ $attendanceStats['absent'] ?? 0 }},
+                        {{ $attendanceStats['late'] ?? 0 }},
+                        {{ $attendanceStats['justified'] ?? 0 }},
+                        {{ $attendanceStats['excused'] ?? 0 }}
+                    ],
+                    backgroundColor: [
+                        '#28a745', '#dc3545', '#ffc107', '#20c997', '#6c757d'
+                    ],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 5 }
+                    }
+                }
+            }
+        });
+    });
+</script>
 
-.stat-empty {
-    background-color: #e2e2e2;
-    border-radius: 30px;
-
-}
-
-.br-30 {
-    border-radius: 30px !important;
-}
-</style>
 @endsection

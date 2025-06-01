@@ -74,7 +74,7 @@
     </form>
 
     <!-- Tasks Table Section -->
-    <div class="page-title mt-5">📂 Past Tasks</div>
+    <div class="page-title mt-5">📂 Your Tasks</div>
     <p class="text-muted mb-4">Browse tasks you created for your classes.</p>
 
     @if ($tasks->isNotEmpty())
@@ -87,6 +87,7 @@
                     <th>⏰ Deadline</th>
                     <th>📎 Attachment</th>
                     <th>📅 Created</th>
+                    <th>🗂️ Submissions</th>
                     <th>⚙️ Actions</th>
                 </tr>
             </thead>
@@ -99,16 +100,24 @@
                     <td>
                         @if ($task->teacherFiles->isNotEmpty())
                         @foreach ($task->teacherFiles as $file)
-                        <a class="btn btn-sm btn-danger" href="{{ asset('storage/' . $file->file_path) }}" target="_blank">📄 Download</a><br>
+                        <a class="btn btn-sm btn-success" href="{{ asset('storage/' . $file->file_path) }}" target="_blank">📄 Download</a><br>
                         @endforeach
                         @else
                         No file
                         @endif
                     </td>
                     <td>{{ $task->created_at->format('d M Y') }}</td>
+                    <td>{{ $task->submissions->count() }}</td>
                     <td>
-                        <!-- Your action buttons here -->
+                        <div class="d-inline-flex gap-1">
+                            <a class="btn btn-sm btn-danger text-white px-2 py-1 mr-2" href="{{ route('teacher_delete_task', $task) }}">🗑️</a>
+                            @if ($task->submissions->count() > 0)
+                            <a href="{{ route('teacher_task_submissions', $task) }}" class="btn btn-sm btn-warning px-2 py-1">👁️</a>
+                            @endif
+                        </div>
                     </td>
+
+
                 </tr>
                 @endforeach
             </tbody>

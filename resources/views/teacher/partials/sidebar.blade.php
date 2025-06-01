@@ -15,26 +15,20 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/forms/basic_elements.html">
+            <a class="nav-link" href="{{ route('teacher_classes_overview') }}">
+              <i class="mdi mdi-book-open-page-variant menu-icon"></i>
+              <span class="menu-title">My Classes</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('teacher_create_task') }}">
               <i class="mdi mdi-view-headline menu-icon"></i>
               <span class="menu-title">Taskes</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/charts/chartjs.html">
-              <i class="mdi mdi-chart-pie menu-icon"></i>
-              <span class="menu-title">Stats</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/tables/basic-table.html">
-              <i class="mdi mdi-grid-large menu-icon"></i>
-              <span class="menu-title">Grades</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/icons/mdi.html">
-              <i class="mdi mdi-emoticon menu-icon"></i>
+            <a class="nav-link" href="{{ route('teacher_inbox') }}">
+              <i class="mdi mdi-facebook-messenger menu-icon"></i>
               <span class="menu-title">Inbox</span>
             </a>
           </li>

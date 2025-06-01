@@ -11,9 +11,11 @@ use App\Models\Group;
 use App\Models\Justification;
 use App\Models\Session;
 use App\Models\Task;
+use App\Models\TaskSubmission;
 use App\Models\Teacher;
 use App\Notifications\JustificationReviewed;
 use App\Services\AttendanceMatrixBuilder;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +26,68 @@ use Maatwebsite\Excel\Facades\Excel;
 class TeacherController extends Controller
 {
     public function dashboard(Request $request) {
+        $teacher = auth()->user()->teacher;
+
+        // Classes count
+        $classCount = Classe::where('teacher_id', $teacher->id)->count();
+
+        // Include sessions with status 'scheduled' or 'rescheduled'
+        $validStatuses = ['scheduled', 'rescheduled'];
+
+        // Next upcoming session
+        $nextSession = Session::whereHas('classe', function ($query) use ($teacher) {
+                $query->where('teacher_id', $teacher->id);
+            })
+            ->whereIn('status', $validStatuses)
+            ->whereDate('session_date', '>=', now())
+            ->orderBy('session_date')
+            ->orderBy('start_time')
+            ->first();
+
+        // Today’s sessions
+        $todaySessions = Session::whereHas('classe', function ($query) use ($teacher) {
+                $query->where('teacher_id', $teacher->id);
+            })
+            ->whereIn('status', $validStatuses)
+            ->where('session_date', Carbon::today()->toDateString())
+            ->orderBy('start_time')
+            ->get();
+            //dd($todaySessions);
+            
+
+        // Ungraded submissions
+        $pendingSubmissions = TaskSubmission::whereHas('task.classe', function ($query) use ($teacher) {
+                $query->where('teacher_id', $teacher->id);
+            })
+            ->whereNull('grade')
+            ->count();
+
+        $pendingJustifications = Justification::whereHas('attendance.session.classe', function ($query) use ($teacher) {
+            $query->where('teacher_id', $teacher->id);
+        })
+        ->where('status', 'pending')
+        ->count();
+
+        $attendanceStats = Attendance::whereHas('session.classe', function ($q) use ($teacher) {
+            $q->where('teacher_id', $teacher->id);
+        })
+        ->whereHas('session', function ($q) {
+            $q->whereMonth('session_date', now()->month);
+        })
+        ->selectRaw("status, COUNT(*) as total")
+        ->groupBy('status')
+        ->pluck('total', 'status');
+
+        //dd(now()->month);
+
+        return view('teacher.dashboard', compact(
+            'classCount',
+            'nextSession',
+            'todaySessions',
+            'pendingSubmissions',
+            'pendingJustifications',
+            'attendanceStats',
+        ));
         return view('teacher.dashboard');
     }
 
@@ -116,6 +180,31 @@ class TeacherController extends Controller
             'sessions',
             'classe_id'
         ]));
+    }
+
+    public function update_session_note(Request $request) {
+        $request->validate([
+            'session_id' => 'required|exists:sessions,id',
+            'note' => 'required|string|max:1000',
+        ]);
+
+        $session = Session::findOrFail($request->session_id);
+        $session->notes = $request->note;
+        $session->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function session_end(Request $request) {
+        $request->validate([
+            'session_id' => 'required|exists:sessions,id',
+        ]);
+
+        $session = Session::findOrFail($request->session_id);
+        $session->status = 'completed';
+        $session->save();
+
+        return response()->json(['success' => true]);
     }
 
     public function attendance_sheet(Request $request) {
@@ -301,7 +390,9 @@ class TeacherController extends Controller
 
         $classes = Classe::where('teacher_id', $teacher->id)->get();
         //dd($classes);
-        $tasks = Task::where('teacher_id', $teacher->id)->get();
+        $tasks = Task::where('teacher_id', $teacher->id)
+        ->with(['submissions'])
+        ->orderBy('created_at', 'desc')->get();
         
         return view('teacher.create_task', compact(['tasks', 'classes']));
     }
@@ -340,6 +431,73 @@ class TeacherController extends Controller
 
         return back()->with('success', 'Task Published Successfully');
 
+    }
+
+    public function delete_task(Request $request, Task $task) {
+        $teacher = Auth::user()->teacher;
+
+        if($teacher->id != $task->teacher_id) {
+            abort(403);
+        }
+
+        $task->delete();
+        return back()->with('success', 'Task Deleted Successfully');
+    }
+
+    public function task_submissions(Request $request, Task $task) {
+        $teacher = Auth::user()->teacher;
+
+        if($teacher->id != $task->teacher_id) {
+            abort(403);
+        }
+
+        $task->load(['submissions.studentFiles', 'submissions.student']);
+        $submissions = $task->submissions;
+
+        return view('teacher.submitted_tasks', compact([
+            'task',
+            'submissions'
+        ]));
+    }
+
+    public function grade_submission(Request $request) {
+        $request->validate([
+        'submission_id' => 'required|exists:task_submissions,id',
+        'grade' => 'nullable|string',
+        ]);
+
+        $submission = TaskSubmission::findOrFail($request->submission_id);
+        $submission->grade = $request->grade;
+        $submission->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function feedback_submission(Request $request) {
+        $request->validate([
+        'submission_id' => 'required|exists:task_submissions,id',
+        'feedback' => 'nullable|string',
+        ]);
+
+        $submission = TaskSubmission::findOrFail($request->submission_id);
+        $submission->feedback = $request->feedback;
+        $submission->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function approve_submission(Request $request, TaskSubmission $submission) {
+        $submission->status = 'approved';
+        $submission->save();
+
+        return back()->with('success', 'Task Approved !');
+    }
+
+    public function refuse_submission(Request $request, TaskSubmission $submission) {
+        $submission->status = 'refused';
+        $submission->save();
+
+        return back()->with('success', 'Task refused !');
     }
 
 }

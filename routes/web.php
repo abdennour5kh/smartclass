@@ -81,6 +81,8 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::delete('/delete_announcement/{id}', [TeacherController::class, 'delete_announcement'])->name('teacher_delete_announcement');
     Route::get('/classes_overview', [TeacherController::class, 'classes_overview'])->name('teacher_classes_overview');
     Route::get('/manage_classe/{id}', [TeacherController::class, 'manage_classe'])->name('teacher_manage_classe');
+    Route::post('/manage_classe/update_session_note', [TeacherController::class, 'update_session_note'])->name('teacher_update_session_note');
+    Route::post('/manage_classe/end_session', [TeacherController::class, 'session_end'])->name('teacher_end_session');
     Route::get('/attendance_sheet/{id}', [TeacherController::class, 'attendance_sheet'])->name('teacher_attendance_sheet');
     Route::post('/store_attendance/{session}', [TeacherController::class, 'store_attendance'])->name('teacher_store_attendance');
     Route::post('/attendance_sheet/export_list', [TeacherController::class, 'export_attendance'])->name('teacher_export_attendance');
@@ -89,6 +91,12 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::post('/conversation/{conversation}', [MessagingController::class, 'reply'])->name('teacher_reply_conversation');
     Route::get('/create_task', [TeacherController::class, 'create_task'])->name('teacher_create_task');
     Route::post('/create_task', [TeacherController::class, 'store_task'])->name('teacher_store_task');
+    Route::get('/delete_task/{task}', [TeacherController::class, 'delete_task'])->name('teacher_delete_task');
+    Route::get('/task_submissions/{task}', [TeacherController::class, 'task_submissions'])->name('teacher_task_submissions');
+    Route::post('/task_submissions/grade_sub', [TeacherController::class, 'grade_submission'])->name('teacher_grade_submission');
+    Route::post('/task_submissions/feedback_sub', [TeacherController::class, 'feedback_submission'])->name('teacher_feedback_submission');
+    Route::get('/task_submissions/approve/{submission}', [TeacherController::class, 'approve_submission'])->name('teacher_submission_approve');
+    Route::get('/task_submissions/refuse/{submission}', [TeacherController::class, 'refuse_submission'])->name('teacher_submission_refuse');
 
 });
 
