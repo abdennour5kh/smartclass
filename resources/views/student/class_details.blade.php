@@ -10,7 +10,7 @@
                     📘 Attendance History - {{ $module->name }}
                 </div>
                 <div class="card-description">
-                    All your sessions for this module, attendance status, and more.
+                    All your attendance status, for your current group/class only.
                 </div>
                 <!-- Search and Export Row -->
                 <div class="d-flex justify-content-between align-items-center my-3 flex-wrap gap-2">

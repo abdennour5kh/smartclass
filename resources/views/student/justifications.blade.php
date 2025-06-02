@@ -7,7 +7,7 @@
     <div class="page-title">
         📝 Absence Justifications
     </div>
-    <p class="text-muted mb-3">Here you will find all absence/justifications records, <strong>Keep it empty!</strong></p>
+    <p class="text-muted mb-3">Here you will find all absence/justifications records, even if you were in an other group <strong>Keep it empty!</strong></p>
 
     <div class="table-responsive">
         <table class="w-100 table table-bordered table-hover table-striped" id="smartClassTable">

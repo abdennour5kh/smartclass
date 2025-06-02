@@ -65,7 +65,7 @@ class StudentController extends Controller
 
     public function classes() {
         $student = Auth::user()->student;
-        $modules = $student->group->modules;
+        $modules = $student->group->classes;
         $info = $student->getClassesReport();
         //dd($info);
 
@@ -77,23 +77,19 @@ class StudentController extends Controller
 
     public function class_details($id) {
         $student = Auth::user()->student;
-        $group = $student->group;
 
-        $gmt = Classe::where('group_id', $group->id)
-        ->where('module_id', $id)
-        ->with(['sessions']) 
-        ->firstOrFail();
+        $classe = Classe::with(['sessions.students', 'teacher'])->findOrFail($id);
 
-        //$teahcer = $gmt->teacher;
-
-        $sessions = $gmt->sessions()->with(['students'])->get();
+        if ($classe->group_id !== $student->group_id) {
+            abort(403, 'Unauthorized access to this class.');
+        }
 
         $attendance = [];
 
-        foreach ($sessions as $session) {
+        foreach ($classe->sessions as $session) {
             $pivot = $session->students->where('id', $student->id)->first()?->pivot;
 
-            if($pivot) {
+            if ($pivot) {
                 $attendance[] = [
                     'date' => $session->session_date,
                     'start' => Carbon::parse($session->start_time)->format('H:i A'),
@@ -101,20 +97,17 @@ class StudentController extends Controller
                     'room' => $session->location,
                     'type' => $session->type,
                     'status' => $pivot->status,
-                    'note' => $pivot->note ?? '-',
-                    'teacher' => $gmt->teacher->first_name . ' ' . $gmt->teacher->last_name,
+                    'note' => $pivot->notes ?? '-',
+                    'teacher' => $classe->teacher->first_name . ' ' . $classe->teacher->last_name,
                 ];
             }
         }
 
-        $module = Module::findOrFail($id);
+        $module = $classe->module; // assuming the Classe model has a `module()` relationship
 
-        return view('student.class_details', compact([
-            'attendance',
-            'student',
-            'module'
-        ]));
+        return view('student.class_details', compact('attendance', 'student', 'module'));
     }
+
 
     public function schedule(Request $request) {
 
