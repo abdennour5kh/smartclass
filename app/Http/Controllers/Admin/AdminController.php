@@ -6,6 +6,7 @@ use App\Exports\StudentsExport;
 use App\Exports\TeachersExport;
 use App\Http\Controllers\Controller;
 use App\Models\Classe;
+use App\Models\DocumentRequest;
 use App\Models\Group;
 use App\Models\GroupChangeRequest;
 use App\Models\Justification;
@@ -35,8 +36,35 @@ use function Laravel\Prompts\error;
 class AdminController extends Controller
 {
     public function dashboard(Request $request) {
-        
-        return view('admin.dashboard');
+        $admin = Auth::user()->admin;
+
+        // Only fetch data related to the admins department
+        $departmentId = $admin->department_id;
+
+        $studentCount = Student::whereHas('group.section.semester.promotion', function ($q) use ($departmentId) {
+            $q->where('department_id', $departmentId);
+        })->count();
+
+        $teacherCount = Teacher::where('department_id', $departmentId)->count();
+
+        $pendingDocRequests = DocumentRequest::whereHas('student.group.section.semester.promotion', function ($q) use ($departmentId) {
+            $q->where('department_id', $departmentId);
+        })->where('status', 'pending')->count();
+
+        $latestDocRequests = DocumentRequest::with('student.user')
+            ->whereHas('student.group.section.semester.promotion', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            })
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('admin.dashboard', [
+            'studentCount' => $studentCount,
+            'teacherCount' => $teacherCount,
+            'pendingDocRequests' => $pendingDocRequests,
+            'latestDocRequests' => $latestDocRequests
+        ]);
     }
 
     public function profile(Request $request) {
@@ -828,6 +856,17 @@ class AdminController extends Controller
         return back()->with('success', 'Class created successfuly !');
     }
 
+    public function update_classe(Request $request, Classe $classe) {
+        $request->validate([
+            'teacher_id' => 'required|exists:teachers,id',
+        ]);
+
+        $classe->teacher_id = $request->teacher_id;
+        $classe->save();
+
+        return back()->with('success', 'Classe updated successfully');
+    }
+
     public function manage_sessions() {
         $admin = Auth::user()->admin;
         // dd($admin->department_id);
@@ -1030,6 +1069,52 @@ class AdminController extends Controller
         $changeRequest->save();
     
         return back()->with('success', 'Group change request ' . $request->action . 'd successfully.');
+    }
+
+    public function document_request(Request $request) {
+        $admin = Auth::user()->admin;
+
+        $requests = DocumentRequest::with(['student'])
+        ->whereHas('student.group.section.semester.promotion', function ($q) use ($admin) {
+            $q->where('department_id', $admin->department_id);
+        })
+        ->latest()
+        ->get();
+        //dd($requests);
+
+        return view('admin.document_request', compact('requests'));
+    }
+
+    public function approve_document(Request $request) {
+        $request->validate([
+            'document_file' => 'required|mimes:pdf|max:5120', 
+            'admin_response' => 'nullable|string|max:1000',
+        ]);
+
+        $doc_request = DocumentRequest::findOrFail($request->id);
+
+        $path = $request->file('document_file')->store('documents', 'public');
+
+        $doc_request->status = 'approved';
+        $doc_request->admin_response = $request->admin_response;
+        $doc_request->document_path = $path;
+        $doc_request->save();
+
+        return back()->with('success', 'Document request approved and file uploaded');
+    }
+
+    public function reject_document(Request $request) {
+        $request->validate([
+            'admin_response' => 'required|string|max:1000',
+        ]);
+
+        $doc_request = DocumentRequest::findOrFail($request->id);
+
+        $doc_request->status = 'rejected';
+        $doc_request->admin_response = $request->admin_response;
+        $doc_request->save();
+
+        return back()->with('success', 'Document request rejected with response');
     }
 
     // public function test_store_teacher(Request $request)

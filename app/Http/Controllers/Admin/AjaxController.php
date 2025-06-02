@@ -10,13 +10,14 @@ use App\Models\Group;
 use App\Models\Module;
 use App\Models\Section;
 use App\Models\Semester;
+use App\Models\Session as ModelsSession;
 use App\Models\SessionTemplate;
-use App\Models\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Validators\ValidationException as ValidatorsValidationException;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Session;
 
 use function Termwind\render;
 
@@ -164,7 +165,7 @@ class AjaxController extends Controller
     public function classe_sessions(Request $request) {
         $classe_id = $request->classe_id;
         $template = SessionTemplate::with('classe')->where('classe_id', $classe_id)->get();
-        $sessions = Session::where('classe_id', $classe_id)->get();
+        $sessions = ModelsSession::where('classe_id', $classe_id)->get();
 
         return response()->json([
             'template' => view('admin.partials._session_template_form', compact(['template', 'classe_id']))->render(),

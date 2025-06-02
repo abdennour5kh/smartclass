@@ -54,7 +54,7 @@
     @if (!$submission)
     <!-- Submission Form -->
     <div class="page-title mt-4">📤 Submit Your Task</div>
-    <form action="{{ route('student_submit_task', $task) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('student_store_task', $task) }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group mb-3">

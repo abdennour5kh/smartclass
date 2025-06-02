@@ -30,6 +30,7 @@
     <div class="page-title">
         🕒 Manage Sessions
     </div>
+    <p class="text-muted">select class to start session managment</p>
     <!-- Success Message -->
     @if (session('success'))
                     <div class="alert alert-success">

@@ -32,7 +32,8 @@ $('#importForm').on('submit', function(e) {
 		error: function(xhr) {
             setTimeout(() => {
                 $('#uploadSpinner').addClass('d-none');
-        
+                console.log("Full XHR error object:", xhr);
+                console.log("Status Code:", xhr.status);
                 if (xhr.status === 422 && xhr.responseJSON.validation_errors) {
                     let messages = '<ul>';
         

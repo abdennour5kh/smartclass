@@ -61,7 +61,7 @@ Route::middleware(['auth', 'role:student', 'force.student.password'])->prefix('s
     Route::get('/classes/announcements/{id}', [StudentController::class, 'announcements'])->name('student_announcements');
     Route::get('/classes/tasks/{id}', [StudentController::class, 'view_tasks'])->name('student_view_tasks');
     Route::get('/classes/tasks/submit/{task}', [StudentController::class, 'submit_task'])->name('student_submit_task');
-    Route::post('/classes/tasks/submit/{task}', [StudentController::class, 'store_task'])->name('student_submit_task');
+    Route::post('/classes/tasks/submit/{task}', [StudentController::class, 'store_task'])->name('student_store_task');
     Route::get('/documents', [StudentController::class, 'documents'])->name('student_documents');
     Route::post('/documents', [StudentController::class, 'store_document_request'])->name('student_store_document_request');
     Route::get('/my_teachers', [StudentController::class, 'show_teachers'])->name('student_show_teachers');
@@ -134,6 +134,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('/store_module', [AdminController::class, 'store_module'])->name('admin_store_module');
     Route::post('/update_module/{id}', [AdminController::class, 'update_module'])->name('admin_update_module');
     Route::post('/store_class', [AdminController::class, 'store_classe'])->name('admin_store_class');
+    Route::post('/edit_class/{classe}', [AdminController::class, 'update_classe'])->name('admin_update_classe');
     Route::get('/manage_sessions', [AdminController::class, 'manage_sessions'])->name('admin_manage_sessions');
     Route::post('/classe/store_template', [AdminController::class, 'store_template'])->name('admin_store_template');
     Route::post('/classe/update_template/{id}', [AdminController::class, 'update_template'])->name('admin_update_template');
@@ -143,6 +144,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('/store_session', [AdminController::class, 'store_session'])->name('admin_store_session');
     Route::post('/justification_update', [AdminController::class, 'update_justification'])->name('admin_update_justification');
     Route::post('/group_change_update', [AdminController::class, 'update_group_change'])->name('admin_update_group_change');
+    Route::get('/document_requests', [AdminController::class, 'document_request'])->name('admin_document_request');
+    Route::post('/approve_doc/{id}', [AdminController::class, 'approve_document'])->name('admin_approve_document');
+    Route::post('/reject_doc/{id}', [AdminController::class, 'reject_document'])->name('admin_reject_document');
 
     // AJAX ROUTES
     Route::get('/get_semesters/{promotion_id}', [AjaxController::class, 'get_semesters'])->name('admin_ajax_get_semesters');

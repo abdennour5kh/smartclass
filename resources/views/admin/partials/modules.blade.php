@@ -92,10 +92,6 @@
                             </div>
                             <div class="col-md-6 text-md-end">
                                 <div class="d-flex flex-wrap justify-content-md-end">
-                                    <a href="#" class="btn btn-inverse-warning btn-sm mr-2 select-module-btn" 
-                                    data-id="{{ $module->id }}" data-name="{{ $module->name }}"
-                                    data-semester="{{ $semester->name }}"
-                                    data-promotion="{{ $promo->name }}" >select</a>
                                     <button class="btn btn-sm btn-inverse-secondary"
                                         data-bs-toggle="collapse"
                                         data-bs-target="#semesterDetails{{ $module->id }}"
@@ -128,7 +124,7 @@
                                             <div class="col-md-4">
                                                 <div class="input-group align-items-center">
                                                 <input type="text" class="form-control customColorInput" name="color" value="{{ $module->color }}" placeholder="{{ $module->color }}">
-                                                <input type="color" class="colorPickerCircle" value="#813d9c" title="Pick a color">
+                                                <input type="color" class="colorPickerCircle" value="{{ $module->color }}" title="Pick a color">
 
                                                 </div>
                                             </div>

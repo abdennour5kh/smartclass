@@ -8,33 +8,39 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ route('teacher_announcement') }}">
-              <i class="mdi mdi-circle-outline menu-icon"></i>
-              <span class="menu-title">Announcements</span>
-              
+            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+              <i class="mdi mdi-account menu-icon"></i>
+              <span class="menu-title">Personnel</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{{ route('admin_manage_students') }}"> Manage Students </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{ route('admin_manage_teachers') }}"> Manage Teachers </a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin_academic_structure') }}">
+              <i class="mdi mdi-arrange-send-to-back  menu-icon"></i>
+              <span class="menu-title">Academic Structure</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/forms/basic_elements.html">
-              <i class="mdi mdi-view-headline menu-icon"></i>
-              <span class="menu-title">Taskes</span>
+            <a class="nav-link" href="{{ route('admin_manage_sessions') }}">
+              <i class="mdi mdi mdi-timer menu-icon"></i>
+              <span class="menu-title">Manage Sessions</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/charts/chartjs.html">
-              <i class="mdi mdi-chart-pie menu-icon"></i>
-              <span class="menu-title">Stats</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/tables/basic-table.html">
+            <a class="nav-link" href="{{ route('admin_document_request') }}">
               <i class="mdi mdi-grid-large menu-icon"></i>
-              <span class="menu-title">Grades</span>
+              <span class="menu-title">Document Requests</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/icons/mdi.html">
-              <i class="mdi mdi-emoticon menu-icon"></i>
+            <a class="nav-link" href="{{ route('admin_inbox') }}">
+              <i class="mdi mdi-facebook-messenger menu-icon"></i>
               <span class="menu-title">Inbox</span>
             </a>
           </li>

@@ -18,6 +18,8 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Session;
+
 
 class StudentsImport implements ToModel, WithHeadingRow, WithValidation, WithEvents
 {
@@ -105,7 +107,7 @@ class StudentsImport implements ToModel, WithHeadingRow, WithValidation, WithEve
             'last_name'                => 'required|string|max:50',
             'email'                    => 'required|email|unique:students,email',
             'registration_number'         => 'required|unique:students,registration_num',
-            'phone_number'             => 'required|string|max:20',
+            'phone_number'             => 'required|max:20',
             'password'                 => 'string|max:100',
             'gender'                   => 'nullable|string|max:7',
             'address'                  => 'nullable|string|max:255',
@@ -138,7 +140,6 @@ class StudentsImport implements ToModel, WithHeadingRow, WithValidation, WithEve
 
             // Phone Number
             'phone_number.required' => 'The phone number is required.',
-            'phone_number.string' => 'The phone number must be a string.',
             'phone_number.max' => 'The phone number must not exceed 20 characters.',
 
             // Password

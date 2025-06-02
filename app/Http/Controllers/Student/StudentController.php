@@ -436,7 +436,7 @@ class StudentController extends Controller
             'submissions' => fn($q) => $q->where('student_id', $student->id)->with('studentFiles')
         ])->where('classe_id', $request->id)->get();
 
-        $module = $tasks->first()->classe->module;
+        $module = $tasks?->first()?->classe?->module;
 
         return view('student.tasks', compact('tasks', 'module'));
     }

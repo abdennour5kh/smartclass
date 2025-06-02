@@ -20,6 +20,7 @@ class Student extends Authenticatable
         "first_name",
         "last_name",
         "phone_number",
+        "gender",
         "address",
         "birth_date",
         "img_url",

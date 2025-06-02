@@ -11,8 +11,6 @@
             <li class="breadcrumb-item"><strong>Semester:</strong> —</li>
             <li class="breadcrumb-item"><strong>Section:</strong> —</li>
             <li class="breadcrumb-item"><strong>Group:</strong> —</li>
-            <li class="breadcrumb-item"><strong>Module:</strong> —</li>
-            <li class="breadcrumb-item"><strong>Class:</strong> —</li>
         </ol>
     </nav>
 

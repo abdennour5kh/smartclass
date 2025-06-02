@@ -88,7 +88,7 @@
 
         <div class="modal-body">
           <p class="mb-3">⚠️ Only Excel files (.xlsx, .xls) are accepted. Please follow the sample format.</p>
-
+          <a href="{{ asset('samples/import_teacher_sample.xlsx') }}">import_teacher_sample.xlsx</a>
           <input class="form-control mb-3" type="file" name="excel_file" accept=".xlsx,.xls" required>
 
           <!-- Spinner -->
